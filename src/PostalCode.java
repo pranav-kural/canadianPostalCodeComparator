@@ -68,6 +68,9 @@ public class PostalCode {
     }};
 
     public PostalCode(String postalCode) throws IllegalArgumentException {
+        // remove spaces from postal code
+        postalCode = postalCode.replaceAll("\\s+", "");
+        // parse and store postal code information
         this.parsePostalCode(postalCode);
     }
 
@@ -123,8 +126,9 @@ public class PostalCode {
     public void setRegionIdentifier(char regionIdentifier) throws IllegalArgumentException {
         if (isValidPostalCodeLetter(regionIdentifier)) {
             this.regionIdentifier = regionIdentifier;
+        } else {
+            throw new IllegalArgumentException("Invalid character provided for FSA third character: " + regionIdentifier);
         }
-        throw new IllegalArgumentException("Invalid character provided for FSA third character");
     }
 
     public int getLDUFirstDigit() {
@@ -152,8 +156,9 @@ public class PostalCode {
     public void setLDUChar(char LDUChar) throws IllegalArgumentException {
         if (isValidPostalCodeLetter(LDUChar)) {
             this.LDUChar = LDUChar;
-        }
+        } else {
         throw new IllegalArgumentException("Invalid letter provided for LDU first character");
+        }
     }
 
     public int getLDULastDigit() {

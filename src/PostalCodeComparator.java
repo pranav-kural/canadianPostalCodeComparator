@@ -61,20 +61,20 @@ public class PostalCodeComparator implements Comparator<String> {
             return 0;
         // else compare and see which one is closer
         else
-            return (getDistanceFromOrigin(firstPostalCode) <= getDistanceFromOrigin(secondPostalCode)) ? 1 : -1;
+            return (getDistanceFromOrigin(firstPostalCode) <= getDistanceFromOrigin(secondPostalCode)) ? -1 : 1;
     }
 
     private static int getDistanceBetweenCodes(PostalCode firstCode, PostalCode secondCode) {
         return Math.abs(getPDDigit(firstCode.getPostalDistrictCharacter()) - getPDDigit(secondCode.getPostalDistrictCharacter()));
     }
 
-    private static PostalCode comparePostalDistricts(PostalCode origin, PostalCode firstPostalCode, PostalCode secondPostalCode) throws IllegalArgumentException {
+    private static int comparePostalDistricts(PostalCode origin, PostalCode firstPostalCode, PostalCode secondPostalCode) throws IllegalArgumentException {
         // guard-clause
         if (origin == null || firstPostalCode == null || secondPostalCode == null) {
             throw new IllegalArgumentException("Invalid arguments for comparePostalDistrict");
         }
         // compare and return result
-        return (getDistanceBetweenCodes(origin, firstPostalCode) <= getDistanceBetweenCodes(origin, secondPostalCode)) ? firstPostalCode : secondPostalCode;
+        return (getDistanceBetweenCodes(origin, firstPostalCode) <= getDistanceBetweenCodes(origin, secondPostalCode)) ? -1 : 1;
     }
 
     private int getURIDifference(PostalCode postalCode) {
@@ -94,7 +94,7 @@ public class PostalCodeComparator implements Comparator<String> {
         if (firstPostalCode.getUrbanRuralIdentifier() == origin.getUrbanRuralIdentifier() && secondPostalCode.getUrbanRuralIdentifier() == origin.getUrbanRuralIdentifier())
             return 0;
         else
-            return (getURIDifference(firstPostalCode) <= getURIDifference(secondPostalCode)) ? 1 : -1;
+            return (getURIDifference(firstPostalCode) <= getURIDifference(secondPostalCode)) ? -1 : 1;
     }
 
     private static int getDifferenceBetweenCodeDigits(int firstDigit, int secondDigit) {
@@ -108,8 +108,8 @@ public class PostalCodeComparator implements Comparator<String> {
             if (firstCodeDigit == originDigit && secondCodeDigit == originDigit)
                 return 0;
             else
-                // return 1, if first digit closer to origin, else -1
-                return (getDifferenceBetweenCodeDigits(originDigit, firstCodeDigit) <= getDifferenceBetweenCodeDigits(originDigit, secondCodeDigit)) ? 1 : -1;
+                // return -1 if first digit closer to origin, else 1
+                return (getDifferenceBetweenCodeDigits(originDigit, firstCodeDigit) <= getDifferenceBetweenCodeDigits(originDigit, secondCodeDigit)) ? -1 : 1;
 
         }
         // if invalid values
@@ -129,7 +129,7 @@ public class PostalCodeComparator implements Comparator<String> {
                 return 0;
             else
                 // else compare and see which one is closer
-                return (getLetterDistance(originLetter, firstCodeLetter) <= getLetterDistance(originLetter, secondCodeLetter)) ? 1 : -1;
+                return (getLetterDistance(originLetter, firstCodeLetter) <= getLetterDistance(originLetter, secondCodeLetter)) ? -1 : 1;
         } else {
             // if invalid letters
             throw new IllegalArgumentException("Invalid argument values for comparison");
@@ -139,8 +139,8 @@ public class PostalCodeComparator implements Comparator<String> {
     /**
      * Compares three postal codes: origin, first postal code and second postal code
      * Returns 0 if first postal code is same as second postal code
-     * Returns 1 if first postal code is closer to the origin
-     * Returns -1 if second postal code is closer to the origin
+     * Returns -1 if first postal code is closer to the origin
+     * Returns 1 if second postal code is closer to the origin
      * @param firstPostalCode instance of PostalCode for first postal code
      * @param secondPostalCode instance of PostalCode for second postal code
      * @return -1, 0, 1 based on comparison
@@ -168,7 +168,7 @@ public class PostalCodeComparator implements Comparator<String> {
         // we return the one closer to origin right away (no more comparison needed)
         comparisonResult = comparePostalDistricts(firstPostalCode, secondPostalCode);
         if (comparisonResult != 0) {
-            // Postal District Comparison result would be 1 if first postal code is closer to origin, else -1
+            // Postal District Comparison result would be -1 if first postal code is closer to origin, else 1
             return comparisonResult;
         }
 
@@ -179,7 +179,7 @@ public class PostalCodeComparator implements Comparator<String> {
         comparisonResult = compareUrbanRuralIdentifier(firstPostalCode, secondPostalCode);
         // if URI not the same of all three postal codes (origin, first, second)
         if (comparisonResult != 0) {
-            // return 1 if URI of firstPostalCode closer to origin, else -1
+            // return -1 if URI of firstPostalCode closer to origin, else 1
             return comparisonResult;
         }
 
@@ -188,7 +188,7 @@ public class PostalCodeComparator implements Comparator<String> {
         comparisonResult = comparePostalCodeLetters(origin.getRegionIdentifier(), firstPostalCode.getRegionIdentifier(), secondPostalCode.getRegionIdentifier());
         // if region identifiers are same
         if (comparisonResult != 0) {
-            // return 1 if region identifier of first code closer to origin than second
+            // return -1 if region identifier of first code closer to origin than second
             return comparisonResult;
         }
 
@@ -198,7 +198,7 @@ public class PostalCodeComparator implements Comparator<String> {
         comparisonResult = comparePostalCodeDigits(origin.getLDUFirstDigit(), firstPostalCode.getLDUFirstDigit(), secondPostalCode.getLDUFirstDigit());
         // if all not same
         if (comparisonResult != 0) {
-            // return 1 if first code closer, else -1
+            // return -1 if first code closer, else 1
             return comparisonResult;
         }
 
@@ -218,8 +218,8 @@ public class PostalCodeComparator implements Comparator<String> {
     /**
      * Compares three postal codes: origin, first postal code and second postal code
      * Returns 0 if first postal code is same as second postal code
-     * Returns 1 if first postal code is closer to the origin
-     * Returns -1 if second postal code is closer to the origin
+     * Returns -1 if first postal code is closer to the origin
+     * Returns 1 if second postal code is closer to the origin
      * @param firstPostalCodeStr string representation of first postal code, ex: "T6X8X9" or "T6x 8X9"
      * @param secondPostalCodeStr string representation of first postal code, ex: "L6B3M9" or "L6B 3M9"
      * @return -1, 0, 1 based on comparison
@@ -236,7 +236,7 @@ public class PostalCodeComparator implements Comparator<String> {
      * Important: requires that you initialize an instance of PostalCodeComparator providing it the origin postal code
      * @param firstPostalCode string representation of first postal code, ex: "T6X8X9" or "T6x 8X9"
      * @param secondPostalCode string representation of first postal code, ex: "L6B3M9" or "L6B 3M9"
-     * @return -1 - if second postal code closer to origin, 1 if first postal code closer to origin, 0 is all same
+     * @return 1 - if second postal code closer to origin, -1 if first postal code closer to origin, 0 is all same
      */
     @Override
     public int compare(String firstPostalCode, String secondPostalCode) {
