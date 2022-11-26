@@ -1,10 +1,12 @@
+import java.util.Comparator;
+
 /**
  * Class to compare Canadian Postal Codes to closeness
  * You can initialize an instance by providing an origin Postal Code which will be used for all comparisons
  * Example: if origin is X, using the methods exposed by this class you can check which postal code among A or B is closer to X
  * You can also use static methods for comparison if you don't want to set an origin
  */
-public class PostalCodeComparator {
+public class PostalCodeComparator implements Comparator<String> {
 
     /**
      * Store an origin postal code for comparison
@@ -227,5 +229,17 @@ public class PostalCodeComparator {
         firstPostalCodeStr = firstPostalCodeStr.replaceAll("\\s+", "");
         secondPostalCodeStr = secondPostalCodeStr.replaceAll("\\s+", "");
         return comparePostalCodes(new PostalCode(firstPostalCodeStr), new PostalCode(secondPostalCodeStr));
+    }
+
+    /**
+     * Method to allow comparison (and sorting) of postal codes
+     * Important: requires that you initialize an instance of PostalCodeComparator providing it the origin postal code
+     * @param firstPostalCode string representation of first postal code, ex: "T6X8X9" or "T6x 8X9"
+     * @param secondPostalCode string representation of first postal code, ex: "L6B3M9" or "L6B 3M9"
+     * @return -1 - if second postal code closer to origin, 1 if first postal code closer to origin, 0 is all same
+     */
+    @Override
+    public int compare(String firstPostalCode, String secondPostalCode) {
+        return comparePostalCodes(firstPostalCode, secondPostalCode);
     }
 }
