@@ -76,3 +76,7 @@ The comparion is not **100%** garaunteed to be accurate, since some bits of the 
 For example, in case of origin: "T0L 1M4", first: "T1K 4L9", second: "T8L 5C3" - first may be deduced to be closer to the origin, but the Urban Rural Identifier (second bit of the postal code) of origin is 0, indicating it is a rural zone, so it is not necessary that first is closer to origin than second (i.e., not sequentially alloted).
 
 Moreover, not all edge cases are handled, example specialized postal codes like "H0H0H0", which don't have a real physical address or location is still considered valid postal code.
+
+## Disclaimer
+
+Important note: 'closeness' here refers to closeness measured using postal codes, and that might not always represent the real physical geographically closeness of an object to another, since, the postal code allocation is not done based on geographical closeness, but based on regional parameters. Example, by postal codes, Toronto is nearer to Ottawa than Montreal, because postal codes of Toronto and Ottawa are more closely related (same region) than Ottawa and Montreal (different provinces), even though in reality Montreal is closer to Ottawa. This comparison based on postal code is however good enough where geo-coordinates aren't available or high degree of accuracy is not needed (because computing geo-coords require additional overhead).
